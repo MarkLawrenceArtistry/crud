@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+</head>
+<body>
+    
+    <div class="content">
+        <div class="form-wrapper">
+            <!-- FORM -->
+            <form id="user-form">
+                <h1 id="user-form-title">Create user</h1>
+                <div>
+                    <label>Username</label>
+                    <input type="text" id="user-username" required>
+                </div>
+                <div>
+                    <label>Password</label>
+                    <input type="password" id="user-password" required>
+                </div>
+                <div>
+                    <button>Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- DISPLAY -->
+        <div class="table-wrapper">
+            <table id="users-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
