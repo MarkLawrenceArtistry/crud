@@ -22,6 +22,7 @@
             <!-- FORM -->
             <form id="user-form">
                 <h1 id="user-form-title">Create user</h1>
+                <input type="text" id="user-id" style="display: none;">
                 <div>
                     <label>Username</label>
                     <input type="text" id="user-username" required>
@@ -34,6 +35,7 @@
                     <button>Submit</button>
                 </div>
             </form>
+            <button onclick="document.querySelector('#user-form').reset()">Reset Form</button>
         </div>
 
         <!-- DISPLAY -->

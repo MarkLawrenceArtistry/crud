@@ -1,5 +1,6 @@
 const express = require('express')
 const db = require('../database')
+const { run, all, get } = require('../utils/helper')
 
 const createUser = (req, res) => {
     const { username, password } = req.body
@@ -50,26 +51,67 @@ const getAllUsers = (req, res) => {
     })
 }
 
-// db.each = call a callback for each rows
-const getAllUsersViaEach = (req, res) => {
+const updateUser = (req, res) => {
+    const { username, password } = req.body
+    const { id } = req.params
+
+    if(!username || !password) {
+        return res.status(400).json({success:false,data:`Username or Password is empty!`})
+    }
+
     const query = `
-        SELECT * FROM users
-    `;
-    let users = []
+        UPDATE users
+        SET
+            username = COALESCE(?, username),
+            password = COALESCE(?, username)
+        WHERE id = ?
+    `
+    const params = [username, password, id]
 
-    db.each(query, [],
-        (err, row) => {
-            if(err) {
-                return res.status(500).json({success:false,data:`Error: ${err.message}`})
-            }
-
-            row.uniqueId = (Date.now() + Math.random()).toString(36);
-            users.push(row)
-        },
-        (err, count) => {
-            res.status(200).json({success:true,data:users,count:count})
+    db.run(query, params, function(err) {
+        if(err) {
+            return res.status(500).json({success:false,data:`Error: ${err.message}`})
         }
-    )
+
+        res.status(200).json({success:true,data:"User updated successfully.",id:this.lastID})
+    })
 }
 
-module.exports = { createUser, getUser, getAllUsers, getAllUsersViaEach }
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = `
+            DELETE FROM users WHERE id = ?
+        `
+        const params = [id]
+
+        const result = await run(query, params)
+        return res.status(200).json({success:false,data:`User deleted successfully!: ${result.lastID}`})
+    } catch(err) {
+        return res.status(500).json({success:false,data:`Internal Server Error: ${err.message}`})
+    }
+}
+
+// db.each = call a callback for each rows
+// const getAllUsersViaEach = (req, res) => {
+//     const query = `
+//         SELECT * FROM users
+//     `;
+//     let users = []
+
+//     db.each(query, [],
+//         (err, row) => {
+//             if(err) {
+//                 return res.status(500).json({success:false,data:`Error: ${err.message}`})
+//             }
+
+//             row.uniqueId = (Date.now() + Math.random()).toString(36);
+//             users.push(row)
+//         },
+//         (err, count) => {
+//             res.status(200).json({success:true,data:users,count:count})
+//         }
+//     )
+// }
+
+module.exports = { createUser, getUser, getAllUsers, updateUser, deleteUser }
